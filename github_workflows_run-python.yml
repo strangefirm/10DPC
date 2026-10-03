@@ -1,0 +1,33 @@
+name: Run Python challenge scripts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  python-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Python files
+        run: |
+          echo "Checking Python files..."
+          for f in DAY*.PY; do
+            if [ "$f" = "DAY10.PY" ]; then
+              echo "Skipping $f (likely GUI/snake game, not suitable for GitHub Actions headless runner)"
+              continue
+            fi
+            echo "Running $f"
+            python "$f"
+          done
